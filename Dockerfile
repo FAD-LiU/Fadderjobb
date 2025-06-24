@@ -1,7 +1,7 @@
 FROM python:3.7
 
 # Stop Django from being sad when trying to create static files
-ENV DJANGO_SETTINGS_MODULE fadderjobb.settings_production
+ENV DJANGO_SETTINGS_MODULE=fadderjobb.settings_production
 
 WORKDIR /srv
 COPY ./ ./
