@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM python:3.12
 
 # Stop Django from being sad when trying to create static files
 ENV DJANGO_SETTINGS_MODULE=fadderjobb.settings_production
