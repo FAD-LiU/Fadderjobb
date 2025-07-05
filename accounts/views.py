@@ -1,3 +1,4 @@
+from accounts.models import AccountCode
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import (
@@ -27,6 +28,7 @@ User = get_user_model()
 # Might bite us in the ass
 liu_id = re.compile(r"^[a-z]{5}[0-9]{3}$")
 
+
 def login(request):
     if request.method != "POST":
         return render(request, "accounts/login.html", {"failed": False})
@@ -43,6 +45,7 @@ def login(request):
 
     django_login(request, user)
     return redirect("index")
+
 
 def register(request):
     if request.method != "POST":
@@ -90,10 +93,11 @@ def activate(request):
 
     try:
 
-        user = User.objects.get(activation_key=activation_code)
+        account_code = AccountCode.objects.get(code=activation_code)
+        user = account_code.user
         user.is_activated = True
-        user.activation_key = ""
         user.save()
+        account_code.delete()
 
         django_login(request, user)
 

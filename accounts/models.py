@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from django.db.models.functions import Now
+
 from fadderjobb.utils import notify_user
 
 from django.conf import settings
@@ -15,6 +17,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from util import to_student_email
 from fadderjobb.settings_shared import PUBLIC_HOST
+
 
 class _UserManager(UserManager):
     def get_by_natural_key(self, username):
@@ -44,7 +47,6 @@ class User(AbstractUser):
     bonus_points = models.ManyToManyField(BonusPoints, blank=True)
 
     is_activated = models.BooleanField(default=False)
-    activation_key = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         if self.name:
@@ -92,11 +94,32 @@ class User(AbstractUser):
         if not self.email:
             self.email = to_student_email(self.username)
 
-        self.activation_key = get_random_string(length=100)
-        self.save()
+        account_code = AccountCode.objects.create(user=self, type="activation")
+        account_code.save()
 
         notify_user(
             self,
             template="accounts/email/activate_account",
-            template_context=dict(activation_code=self.activation_key),
+            template_context=dict(activation_code=account_code.code),
         )
+
+
+class AccountCode(models.Model):
+    code = models.CharField(max_length=100, unique=True, primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    type = models.CharField(
+        max_length=30,
+        choices=[("activation", "Activation"), ("reset_password", "Reset Password")],
+    )
+    created = models.DateTimeField(default=Now())
+
+    def save(self, **kwargs):
+        if not self.code:
+            code = get_random_string(length=32)
+            # Ensure the code is unique
+            while AccountCode.objects.filter(code=code).exists():
+                code = get_random_string(length=32)
+
+            self.code = get_random_string(length=32)
+
+        super().save(**kwargs)
