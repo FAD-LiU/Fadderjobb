@@ -41,7 +41,9 @@ def login(request):
         return render(request, "accounts/login.html", {"failed": True})
 
     if not user.is_activated:
-        return render(request, "accounts/login.html", {"failed": True, "error_message": "Användaren är inte aktiverad!"})
+        user.send_activation_email()
+
+        return redirect("accounts:activate")
 
     django_login(request, user)
     return redirect("index")
