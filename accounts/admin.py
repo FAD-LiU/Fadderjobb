@@ -36,6 +36,8 @@ def reset_password(modeladmin, request, queryset):
             random.SystemRandom().choices(available_characters, k=20)
         )
         user.set_password(new_password)
+        user.save()
+
         notify_user(
             user,
             template="admin/accounts/email/password_reset",
