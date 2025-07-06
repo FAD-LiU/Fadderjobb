@@ -281,7 +281,7 @@ PHONENUMBER_DEFAULT_REGION = "SE"
 
 SYSTEM_ADMINS = ["joshu135"]
 
-DEFAULT_DOMAIN = "https://fadderjobb.d-sektionen.se"
+DEFAULT_DOMAIN = os.getenv("BASE_URL", "http://localhost:8000")
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/

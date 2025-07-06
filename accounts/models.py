@@ -103,6 +103,23 @@ class User(AbstractUser):
             template_context=dict(activation_code=account_code.code),
         )
 
+    def send_password_reset_email(self):
+        if not self.email:
+            self.email = to_student_email(self.username)
+
+        account_code = AccountCode.objects.create(user=self, type="reset_password")
+        account_code.save()
+
+        reset_url = settings.DEFAULT_DOMAIN + reverse(
+            "accounts:reset_password", args=[account_code.code]
+        )
+
+        notify_user(
+            self,
+            template="accounts/email/request_password_reset",
+            template_context=dict(reset_url=reset_url),
+        )
+
 
 class AccountCode(models.Model):
     code = models.CharField(max_length=100, unique=True, primary_key=True)

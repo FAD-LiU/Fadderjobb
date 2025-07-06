@@ -108,6 +108,93 @@ def activate(request):
         return render(request, "accounts/activate_account.html", {"failed": True})
 
 
+def request_password_reset(request):
+    if request.method == "GET":
+        return render(
+            request, "accounts/request_password_reset.html", {"failed": False}
+        )
+
+    username = request.POST.get("username")
+    if not username:
+        return render(
+            request,
+            "accounts/request_password_reset.html",
+            {"failed": True, "error_message": "Du måste fylla i ett Liu-ID."},
+        )
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return render(
+            request,
+            "accounts/request_password_reset.html",
+            {"failed": True, "error_message": "Kunde inte hitta användaren."},
+        )
+
+    user.send_password_reset_email()
+
+    return render(
+        request,
+        "accounts/request_password_reset.html",
+        {
+            "failed": True,  # Cursed way to display success feedback to the user.
+            "error_message": "Ett mejl har skickats till din student e-postadress!",
+        },
+    )
+
+
+def reset_password(request, reset_code):
+    if request.method == "GET":
+        return render(
+            request,
+            "accounts/reset_password.html",
+            {"failed": False, "reset_code": reset_code},
+        )
+
+    account_code = AccountCode.objects.filter(code=reset_code).first()
+    if not account_code:
+        return render(
+            request,
+            "accounts/reset_password.html",
+            {
+                "failed": True,
+                "error_message": "Återställningskoden stämmer inte.\
+                    Detta kan bero på att den redan har använts, eller att den har gått ut.",
+                "reset_code": reset_code,
+            },
+        )
+
+    password = request.POST.get("password")
+    repeat_password = request.POST.get("repeat_password")
+
+    if len(password) < 10:
+        return render(
+            request,
+            "accounts/reset_password.html",
+            {
+                "failed": True,
+                "error_message": "Lösenordet måste vara minst 10 tecken långt.",
+                "reset_code": reset_code,
+            },
+        )
+
+    if password != repeat_password:
+        return render(
+            request,
+            "accounts/reset_password.html",
+            {
+                "failed": True,
+                "error_message": "lösenorden matchar inte.",
+                "reset_code": reset_code,
+            },
+        )
+
+    account_code.user.set_password(password)
+    account_code.user.save()
+    account_code.delete()
+
+    return redirect("accounts:login")
+
+
 def loginfailed(request):
     return render(request, "accounts/loginfailed.html")
 
