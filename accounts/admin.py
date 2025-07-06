@@ -38,7 +38,7 @@ def reset_password(modeladmin, request, queryset):
         user.set_password(new_password)
         notify_user(
             user,
-            template="accounts/email/password_reset",
+            template="admin/accounts/email/password_reset",
             template_context=dict(
                 new_password=new_password,
             ),
