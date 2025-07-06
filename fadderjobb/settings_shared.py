@@ -40,6 +40,8 @@ ALLOWED_HOSTS = [
 
 AUTH_USER_MODEL = "accounts.User"
 
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 # Impersonation
 # https://github.com/skorokithakis/django-loginas
 
