@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group
 
 from post_office import mail
 
+
 def send_mail(recipient, subject, message, html_message):
     mail.send(
         recipient,
@@ -21,9 +22,9 @@ def _build_message(template_name, template_context):
 
     context = template_context or {}
 
-    subject_rendered = subject_template.render(context)
-    text_rendered = text_template.render(context)
-    html_rendered = html_template.render(context)
+    subject_rendered = subject_template.render(context).rstrip()
+    text_rendered = text_template.render(context).rstrip()
+    html_rendered = html_template.render(context).rstrip()
 
     return subject_rendered, text_rendered, html_rendered
 
