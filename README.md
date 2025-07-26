@@ -5,6 +5,8 @@ Ursprungligen skriven av Daniel Roos (STABEN Webb 18/19)
 Vidareutvecklad av
 - Emil Nilsson (STABEN Webb & Info 20/21)
 - Joseph Hughes (STABEN Webb & Info 2022)
+- Andreas Blomqvist (STABEN Webb & Info 2023 / FAD 2025)
+- Oskar Arensmeier (STABEN Webb & Info 2024 / FAD 2025)
 
 ## Bakgrund
 
