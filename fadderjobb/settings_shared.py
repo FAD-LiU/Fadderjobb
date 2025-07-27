@@ -36,6 +36,7 @@ ALLOWED_HOSTS = [
     "tackling-fadderjobb.staben.info",
     "fadderjobb.d-sektionen.se",
     "local.fadderjobb",
+    PUBLIC_HOST
 ]
 
 AUTH_USER_MODEL = "accounts.User"
