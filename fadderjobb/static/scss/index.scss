@@ -1,1 +1,17 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  margin-left: -20px;
+  width: 100%;
 
+  .lt-logo {
+    width: 100px;
+    border-radius: 0;
+    padding-bottom: 3px;
+  }
+
+  p {
+    margin-bottom: 0;
+    text-align: center;
+  }
+}
