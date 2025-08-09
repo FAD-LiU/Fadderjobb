@@ -102,6 +102,7 @@ INSTALLED_APPS = [
     "sass_processor",
     #"cas",
     "post_office",
+    "anymail",
     "constance",
     "phonenumber_field",
     "loginas",
@@ -255,6 +256,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 POST_OFFICE = {
     "LOG_LEVEL": 0,  # Log nothing
+    "BACKENDS": {"anymail.EmailBackend": "anymail.backends.mailgun.EmailBackend"},
 }
 
 try:
@@ -304,3 +306,9 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     "sass_processor.finders.CssFinder",
 ]
+
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.getenv("MAILGUN_API_KEY", ""),
+    "MAILGUN_SENDER_DOMAIN": os.getenv("MAILGUN_SENDER_DOMAIN", ""),
+    "MAILGUN_API_URL": "https://api.eu.mailgun.net/v3",
+}
