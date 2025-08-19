@@ -30,6 +30,9 @@ try:
         """Clear old emails every day at 00:00"""
         call_command("cleanup_mail", "--days=30", "--delete-attachments")
 
+    def clear_old_account_codes(num):
+        """Clear old account codes every day at 00:00"""
+        call_command("clearoldaccountcodes", "--days=30", "--delete-attachments")
 
 except ImportError:
     print("uwsgidecorators not found. Cron and timers are disabled")

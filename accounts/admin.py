@@ -12,7 +12,7 @@ from django.db import models
 from fadderjobb.utils import notify_user
 from loginas.utils import login_as
 
-from .models import BonusPoints
+from .models import BonusPoints, AccountCode
 from fadderanmalan.models import EquipmentOwnership, EnterQueue
 from fadderjobb.filters import DropdownFilterRelated
 
@@ -36,9 +36,11 @@ def reset_password(modeladmin, request, queryset):
             random.SystemRandom().choices(available_characters, k=20)
         )
         user.set_password(new_password)
+        user.save()
+
         notify_user(
             user,
-            template="accounts/email/password_reset",
+            template="admin/accounts/email/password_reset",
             template_context=dict(
                 new_password=new_password,
             ),
@@ -163,5 +165,17 @@ class UserAdmin(admin.ModelAdmin):
         return super().response_change(request, obj)
 
 
+class AccountCodeAdmin(admin.ModelAdmin):
+    model = apps.get_model("accounts", "AccountCode")
+    fields = ("code", "user", "type", "created")
+    readonly_fields = ("created",)
+    list_display = ("code", "user", "type", "created")
+    search_fields = ("code", "user__username", "user__name")
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related("user")
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(BonusPoints, BonusPointsAdmin)
+admin.site.register(AccountCode, AccountCodeAdmin)

@@ -14,6 +14,10 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("logout", views.logout, name="logout"),
     path("activate", views.activate, name="activate"),
+    path("reset_password", views.request_password_reset, name="request_reset_password"),
+    path(
+        "reset_password/<str:reset_code>/", views.reset_password, name="reset_password"
+    ),
     path("restore/", views.restore_impersonation, name="restore"),
     path("my_profile/", views.my_profile, name="my_profile"),
     path("edit_profile/", views.edit_profile, name="edit_profile"),
