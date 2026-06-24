@@ -9,5 +9,5 @@ COPY ./ ./
 RUN pip install --upgrade pip \
   && pip install -r requirements.txt
 
-RUN python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput && python3 manage.py compilescss
 
