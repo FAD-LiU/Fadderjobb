@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count, F, Q
 from django.http import Http404
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from constance import config
 
 from .models import Job, Type
@@ -9,6 +10,7 @@ from .utils import registration as reg_utils, misc as misc_utils
 from .exceptions import UserError
 
 
+@login_required
 def job_list(request):
     jobs = Job.objects.order_by(F("start_date")).filter(~Job.is_hidden_query_filter())
 
@@ -67,6 +69,7 @@ def job_list(request):
     )
 
 
+@login_required
 def job_details(request, slug):
     try:
         job = Job.objects.get(slug=slug, hidden=False)
